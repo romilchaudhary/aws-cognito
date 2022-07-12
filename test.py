@@ -2,8 +2,8 @@ import boto3
 
 
 bucket_name = 'new-files-uploads-data'
-s3_client = boto3.client('s3',aws_access_key_id="AKIA2QCI4BBXNZYBOTJ7",
-         aws_secret_access_key="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")
+s3_client = boto3.client('s3',aws_access_key_id="",
+         aws_secret_access_key="")
 
 versions = s3_client.list_object_versions(Bucket=bucket_name)
 # print(versions['Versions'])

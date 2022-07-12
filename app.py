@@ -71,8 +71,8 @@ def copy_to_bucket(bucket_from_name, bucket_to_name, file_name):
 
 client = boto3.client('cognito-idp', region_name=os.getenv('COGNITO_REGION'))
 
-dynamodb = boto3.resource('dynamodb',aws_access_key_id="AKIA2QCI4BBXNZYBOTJ7",
-         aws_secret_access_key="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", region_name=os.getenv('COGNITO_REGION'))
+dynamodb = boto3.resource('dynamodb',aws_access_key_id="",
+         aws_secret_access_key="", region_name=os.getenv('COGNITO_REGION'))
 # print(list(dynamodb.tables.all()))
 my_data_table = dynamodb.Table('my-data')
 
