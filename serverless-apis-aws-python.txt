@@ -1,0 +1,67 @@
+1) Cognito
+	https://www.archerimagine.com/articles/aws/aws-cognito-tutorials.html
+	# access token - token which is used to access user
+	# refresh token - token which is used to regenerate access token when access token expires
+
+2) S3
+    batch uploading and versioning
+	https://avilpage.com/2019/07/aws-s3-bucket-objects-versions.html
+	https://stackoverflow.com/questions/35545435/how-can-i-use-versioning-in-s3-with-boto3
+	https://bobbyhadz.com/blog/aws-grant-lambda-access-to-s3
+	https://realpython.com/python-boto3-aws-s3/
+
+3) DynamoDB
+Scans have a 1mb limit on the data returned. If we think we�re going to exceed that, we should continue to re-scan and pass in the LastEvaluatedKey:
+https://highlandsolutions.com/blog/hands-on-examples-for-working-with-dynamodb-boto3-and-python
+Here is an example loop to get all the data from a DynamoDB table using LastEvaluatedKey:
+
+import boto3
+client = boto3.client('dynamodb')
+
+def dump_table(table_name):
+    results = []
+    last_evaluated_key = None
+    while True:
+        if last_evaluated_key:
+            response = client.scan(
+                TableName=table_name,
+                ExclusiveStartKey=last_evaluated_key
+            )
+        else: 
+            response = client.scan(TableName=table_name)
+        last_evaluated_key = response.get('LastEvaluatedKey')
+        
+        results.extend(response['Items'])
+        
+        if not last_evaluated_key:
+            break
+    return results
+
+# Usage
+data = dump_table('your-table-name')
+
+4) Aws Lambda
+    https://docs.aws.amazon.com/cognito/latest/developerguide/user-pool-lambda-pre-sign-up.html
+    https://bobbyhadz.com/blog/aws-grant-lambda-access-to-dynamodb
+    https://aws.amazon.com/blogs/security/how-to-create-an-aws-iam-policy-to-grant-aws-lambda-access-to-an-amazon-dynamodb-table/
+
+
+
+Monolith is simple to develop and implement, making it ideal for prototypes and to validate market demand before investing too much into the software. This architecture design fits well into projects with a relatively low complexity and a small team of developers.
+
+A Monolith usually leads to a higher level of coupling in the codebase, are harder to scale, since we cannot customize resource allocation for each component, and can only be deployed as a unit, which can make deployment slower and riskier.
+
+A Microservices architecture, on the other hand, allows teams to develop, test, and deploy services independently. In Microservices, teams can work on different services without interfering with each other.
+
+
+#### Daily tasks ########
+19-April-2022 => login using cognito and flask api
+20-April-2022 => cognito signup using flask api and dynamoDB entry for every login n signup using lambda
+21-April-2022 => other cognito use cases - triggers
+https://docs.aws.amazon.com/cognito/latest/developerguide/user-pool-lambda-pre-sign-up.html
+22-April-2022 => s3 bucket
+23-April-2022 => API Gateway
+24-April-2022 => cloudfront n route53
+25-30 April 2022 => API Gateway, AWS lambda, policies, IAM n flask revision
+
+
