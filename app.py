@@ -11,6 +11,14 @@ from flask_cors import CORS
 import uuid
 import random
 import threading
+import re
+from pymongo import MongoClient
+import json
+
+
+class EmailNotValidError(Exception):
+    """Raised when the email is not valid"""
+    pass
 
 
 class ExportingThread(threading.Thread):
@@ -75,6 +83,10 @@ dynamodb = boto3.resource('dynamodb',aws_access_key_id="",
          aws_secret_access_key="", region_name=os.getenv('COGNITO_REGION'))
 # print(list(dynamodb.tables.all()))
 my_data_table = dynamodb.Table('my-data')
+
+mongo_client = MongoClient('localhost', 27017)
+db = mongo_client.flask_db
+todos = db.todos
 
 app = Flask(__name__)
 CORS(app)
@@ -246,6 +258,32 @@ def authenticate(username, password):
     else:
         return False
     return False
+
+
+@app.route("/todo", methods=["GET", "POST"])
+def todo():
+    if request.method == 'GET':
+        dic = [{"id": 1, "name": "romil"}, {"id":2, "name": "Chinku"}, 
+            {"id": 4, "name":"kaanha"}
+        ]
+        return jsonify(dic)
+    elif request.method == 'POST':
+        data = request.get_json()            
+        try:
+            email = data['email']
+            name = data['name']
+            _id = todos.insert_one({'email': email, 'name': name}).inserted_id
+            regex = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b'
+            if(re.fullmatch(regex, data['email'])):
+                return json.dumps(_id, default=str)
+                return jsonify({"id":_id}), 200
+            else:
+                raise EmailNotValidError        
+        except EmailNotValidError:
+            return jsonify("email not valid"), 500
+        except Exception as e:
+            print(e)
+            return jsonify("error")
 
 
 if __name__ == "__main__":
