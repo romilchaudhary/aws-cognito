@@ -1,0 +1,12 @@
+In this tutorial I will show you how to dockerize Django MySQL app using docker compose in Linux environment. So why do you need docker compose when you have docker container? Generally it is said to be best practices when each docker container runs a process with single responsibility, but for this application you need two containers – one is for Django app and another one is for MySQL server.
+
+Therefore two containers are running independently and to establish communication between two containers you need docker compose.
+
+Docker compose is basically a three-step process:
+
+Define your app’s environment with a Dockerfile so it can be reproduced anywhere.
+Define services that make up your app in docker-compose.yml so they can be run together in an isolated environment.
+Run docker-compose up and compose starts and runs your entire app.
+
+https://roytuts.com/docker-compose-dockerizing-django-mysql-app/
+https://dev.to/foadlind/dockerizing-a-django-mysql-project-g4m
